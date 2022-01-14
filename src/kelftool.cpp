@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,18 +22,27 @@
 
 std::string getKeyStorePath()
 {
+	char *keydir;
 #ifdef __linux__
-	return std::string(getenv("HOME")) + "/PS2KEYS.dat";
+	if (keydir = getenv("KEYDIR"))
+	{
+		return std::string(keydir) + "/PS2KEYS.dat";
+	}
+	else
+	{
+		printf("Set KEYDIR env variable.");
+		exit(1);
+	}
 #else
 	return std::string(getenv("USERPROFILE")) + "\\PS2KEYS.dat";
 #endif
 }
 
-int decrypt(int argc, char** argv)
+int decrypt(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		printf("%s decrypt <input> <output>\n", argv[0]);
+		printf("KEYDIR=<keydir> %s decrypt <input> <output>\n", argv[0]);
 		return -1;
 	}
 
@@ -62,7 +71,7 @@ int decrypt(int argc, char** argv)
 	return 0;
 }
 
-int encrypt(int argc, char** argv)
+int encrypt(int argc, char **argv)
 {
 	if (argc < 2)
 	{
@@ -95,7 +104,7 @@ int encrypt(int argc, char** argv)
 	return 0;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
